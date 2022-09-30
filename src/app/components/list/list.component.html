@@ -1,0 +1,49 @@
+<kendo-treelist
+    kendoTreeListExpandable
+    [kendoTreeListFlatBinding]="data"
+    idField="id" parentIdField="managerId"
+    [kendoTreeListReactiveEditing]="createFormGroup"
+    [height]="500"
+    [pageSize]="10"
+    [pageable]="true"
+    [sortable]="true"
+>
+    <ng-template kendoTreeListToolbarTemplate>
+        <button kendoTreeListAddCommand type="button">Add new</button>
+    </ng-template>
+    <kendo-treelist-column [expandable]="true" field="name" title="Name">
+    </kendo-treelist-column>
+    <kendo-treelist-column field="title" title="Title">
+    </kendo-treelist-column>
+    <kendo-treelist-column field="phone" title="Phone">
+    </kendo-treelist-column>
+    <kendo-treelist-command-column [width]="140">
+        <ng-template kendoTreeListCellTemplate let-isNew="isNew" let-cellContext="cellContext">
+            <!-- "Add Child" command directive, will not be visible in edit mode -->
+            <button [kendoTreeListAddCommand]="cellContext"
+                    icon="filter-add-expression" title="Add Child">
+            </button>
+
+            <!-- "Edit" command directive, will not be visible in edit mode -->
+            <button [kendoTreeListEditCommand]="cellContext"
+                    icon="pencil" title="Edit" [primary]="true">
+            </button>
+
+            <!-- "Remove" command directive, will not be visible in edit mode -->
+            <button [kendoTreeListRemoveCommand]="cellContext"
+                    icon="trash" title="Remove">
+            </button>
+
+            <!-- "Save" command directive, will be visible only in edit mode -->
+            <button [kendoTreeListSaveCommand]="cellContext"
+                    [disabled]="formGroup.invalid"
+                    icon="save" title="{{ isNew ? 'Add' : 'Update' }}">
+            </button>
+
+            <!-- "Cancel" command directive, will be visible only in edit mode -->
+            <button [kendoTreeListCancelCommand]="cellContext"
+                    icon="cancel" title="{{ isNew ? 'Discard changes' : 'Cancel' }}">
+            </button>
+        </ng-template>
+    </kendo-treelist-command-column>
+  </kendo-treelist>

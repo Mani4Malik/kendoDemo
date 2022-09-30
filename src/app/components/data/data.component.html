@@ -1,0 +1,112 @@
+<h3>Project Story Points Dtails </h3>
+    <table class="table mt-5">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Working Time</th>          
+          </tr>
+        </thead>
+        <tbody class="text-center" *ngFor="let emp of record;let i=index" #emp>
+            <tr>
+          <td>{{i}}</td>
+          <td>{{emp.name}}</td>
+          <td>{{emp.workingHours}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="row d-flex">      
+        <button type="button" class="btn btn-info mr-2" data-toggle="modal" data-target="#exampleModalCenter"
+        (click)="toggleChart('donut')">
+            Donut Chart
+          </button>
+       
+        <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#exampleModalCenter"
+        (click)="toggleChart('line')">
+            Line Chart
+          </button>
+
+
+        <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#exampleModalCenter"
+        (click)="toggleChart('pie')">
+            pie Chart
+          </button>       
+        <button type="button" class="btn btn-alert mr-2" data-toggle="modal" data-target="#exampleModalCenter"
+        (click)="toggleChart('column')">
+            Column Chart
+          </button>
+        
+      </div>
+
+
+  
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">{{type}} CHART</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <kendo-chart title="Donut Chart" *ngIf="type=='donut'">
+                <kendo-chart-series>
+                  <kendo-chart-series-item
+                    type="donut"
+                    [data]="record"
+                    categoryField="name"
+                    field="workingHours"
+                  >
+                    <kendo-chart-series-item-labels
+                      [content]="labelContent"
+                      color="#fff"
+                      background="none"
+                    >
+                    </kendo-chart-series-item-labels>
+                  </kendo-chart-series-item>
+                </kendo-chart-series>
+                <kendo-chart-legend [visible]="false"></kendo-chart-legend>
+              </kendo-chart>
+              <kendo-chart *ngIf="chart && type != 'pie' && type !=='donut'">   
+                <kendo-chart-series>
+                  <kendo-chart-series-item
+                    [type]="type"
+                    [data]="record"
+                    field="workingHours"
+                    categoryField="name"
+                    [labels]="{ visible: true, content: labelContent}"          
+                  >
+                  </kendo-chart-series-item>
+                </kendo-chart-series>
+              </kendo-chart>        
+          
+              <kendo-chart title="Project Story Points" *ngIf="type=='pie'">
+                  <kendo-chart-legend position="bottom"></kendo-chart-legend>
+                  <kendo-chart-series>
+                    <kendo-chart-series-item
+                      type="pie"
+                      [data]="record"
+                    field="workingHours"
+                    categoryField="name"
+                      [labels]="{ visible: true, content: labelContent }"
+                    >
+                    </kendo-chart-series-item>
+                  </kendo-chart-series>
+                </kendo-chart>
+
+  
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- ---------------------------------------treeView------------------------- -->
