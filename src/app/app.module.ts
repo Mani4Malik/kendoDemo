@@ -12,7 +12,9 @@ import { ListComponent } from './components/list/list.component';
 import { TreeViewModule } from "@progress/kendo-angular-treeview";
 import {MatIconModule} from '@angular/material/icon';
 import {MatTreeModule} from '@angular/material/tree';
+import { MatInputModule } from '@angular/material/input';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
 import { ChecklistDatabase, DirectoryComponent } from './components/directory/directory.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -46,7 +48,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatFormFieldModule,
     MatIconModule,
     MatIconModule,
-    MatTreeModule
+    MatTreeModule,
+    MatInputModule,
+    MatButtonModule
 
     
   ],

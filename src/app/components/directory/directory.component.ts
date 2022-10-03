@@ -89,6 +89,9 @@ export class ChecklistDatabase {
   /** Add an item to to-do list */
 
   insertItem(parent: TodoItemNode, name: string): TodoItemNode {
+
+    console.log('insert item called');
+    
     if (!parent.children) {
       parent.children = [];
     }
@@ -372,11 +375,15 @@ export class DirectoryComponent {
   }
 
 
-  RemoveItem(node:any){
-    console.log(node);
+  RemoveItem(node:any){    
+    const nestedNode:any = this.flatNodeMap.get(node);
+    this.database.deleteItem(nestedNode);
     
-    console.log(this.database.data);
-    
+  }
+
+  updateItem(node:any,name:string){       
+    const nestedNode:any = this.flatNodeMap.get(node);
+    this.database.updateItem(nestedNode,name);
   }
 
 
