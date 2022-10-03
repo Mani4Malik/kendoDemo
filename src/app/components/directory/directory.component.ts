@@ -22,10 +22,63 @@ export class TodoItemFlatNode {
 /**
  * The Json object for to-do list data.
  */
-const TREE_DATA = {
-  home:{id:1,name:'dsds',sham:"jhjhjh",kam:'jhjhjhjh',Work:{id:1,name:'hjhjhjhj',khaliq:{id:1}},Calling:{id:1}}
-};
-
+const TREE_DATA = {  "RCATree": [
+  {
+      "id": 100547,
+      "text": "Activation Delay",
+      "parent": "#",
+      "state": {
+          "opened": true
+      },
+      "children": [
+          {
+              "id": 100548,
+              "text": "Poor identification by EMS",
+              "parent": "100547",
+              "state": {
+                  "opened": true
+              },
+              "children": [
+                  {
+                      "id": 100550,
+                      "text": "Alternating symptoms presentation for basilar thrombosis missed",
+                      "parent": "100548",
+                      "state": {
+                          "opened": true
+                      },
+                      "children": [],
+                      "workflowid": null
+                  },
+                  {
+                      "id": 100551,
+                      "text": "Poor design or training of questions that would trigger tool usage (Defect)",
+                      "parent": "100548",
+                      "state": {
+                          "opened": true
+                      },
+                      "children": [],
+                      "workflowid": null
+                  },
+                  {
+                      "id": 100552,
+                      "text": "Posterior Circulation symptoms (dizziness, nausea) missed",
+                      "parent": "100548",
+                      "state": {
+                          "opened": true
+                      },
+                      "children": [],
+                      "workflowid": null
+                  },
+                  {
+                      "id": 100553,
+                      "text": " Concurrent presentation / code (chest pain, trauma, sepsis alert)",
+                      "parent": "100548",
+                      "state": {
+                          "opened": true
+                      },
+                      "children": [],
+                      "workflowid": null
+                  },]},]},]};
 /**
  * Checklist database, it can build a tree structured Json object.
  * Each node in Json object represents a to-do item or a category.
@@ -48,34 +101,41 @@ export class ChecklistDatabase {
 
     // Notify the change.
     this.dataChange.next(data);
+    
   }
 
   /**
    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
    * The return value is the list of `TodoItemNode`.
    */
-  buildFileTree(obj:any, level: number): TodoItemNode[] {
-    
-    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {  
-            
-      const value = obj[key];
-      const type=typeof value;      
-      const node = new TodoItemNode();
-      node.item = key;    
 
+  buildFileTree(obj:any, level: number): TodoItemNode[] {    
+// console.log(obj);
+
+ return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {   
+      const value = obj[key];
+
+      console.log('value',typeof value=='object'?value:[]);
+      
+      const type=typeof value;  
+      
+     const node:any = new TodoItemNode();  
+      node.item=key; 
+      
       if (value != null) {     
         if (typeof value === 'object') {         
-          node.children = this.buildFileTree(value, level);           
-        } else  {
-          
+          node.children = this.buildFileTree(value, level+1);           
+        } else  {  
            node.item = value;
+           
         }
 
-      }      
+      } 
+     
       
-      return accumulator.concat(type=='object'? node :[])
+      return accumulator.concat(node)
       
-    }, []);
+    },[]);
   }
 
   /** Add an item to to-do list */
@@ -376,5 +436,6 @@ export class DirectoryComponent {
     this.database.updateItem(nestedNode,name);
   }
 
+ 
 
 }
