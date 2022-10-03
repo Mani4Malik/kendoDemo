@@ -23,21 +23,7 @@ export class TodoItemFlatNode {
  * The Json object for to-do list data.
  */
 const TREE_DATA = {
-  Groceries: {
-    'Almond Meal flour': null,
-    'Organic eggs': null,
-    'Protein Powder': null,
-    Fruits: {
-      Apple: null,
-      Berries: ['Blueberry', 'Raspberry'],
-      Orange: null
-    }
-  },
-  Reminders: [
-    'Cook dinner',
-    'Read the Material Design spec',
-    'Upgrade Application to Angular'
-  ]
+  home:{id:1,name:'dsds',sham:"jhjhjh",kam:'jhjhjhjh',Work:{id:1,name:'hjhjhjhj',khaliq:{id:1}},Calling:{id:1}}
 };
 
 /**
@@ -69,28 +55,32 @@ export class ChecklistDatabase {
    * The return value is the list of `TodoItemNode`.
    */
   buildFileTree(obj:any, level: number): TodoItemNode[] {
-    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
+    
+    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {  
+            
       const value = obj[key];
+      const type=typeof value;      
       const node = new TodoItemNode();
-      node.item = key;
+      node.item = key;    
 
-      if (value != null) {
-        if (typeof value === 'object') {
-          node.children = this.buildFileTree(value, level + 1);
-        } else {
-          node.item = value;
+      if (value != null) {     
+        if (typeof value === 'object') {         
+          node.children = this.buildFileTree(value, level);           
+        } else  {
+          
+           node.item = value;
         }
-      }
 
-      return accumulator.concat(node);
+      }      
+      
+      return accumulator.concat(type=='object'? node :[])
+      
     }, []);
   }
 
   /** Add an item to to-do list */
 
   insertItem(parent: TodoItemNode, name: string): TodoItemNode {
-
-    console.log('insert item called');
     
     if (!parent.children) {
       parent.children = [];

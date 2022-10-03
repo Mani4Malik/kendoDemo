@@ -25,6 +25,10 @@
     </span>
     <span>{{node.item}}</span>
                  <span class="mat-icon-button" (click)="addNewItem(node)"><mat-icon>add</mat-icon></span>
+                 <mat-tree-node *matTreeNodeDef="let node; when:hasChild"  matTreeNodePadding>  
+                        
+                  </mat-tree-node>
+
                  <span class="mat-icon-button" (click)="RemoveItem(node)"><mat-icon>delete</mat-icon></span>
   </mat-tree-node>
 </mat-tree>
