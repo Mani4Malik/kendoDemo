@@ -373,14 +373,9 @@ export class DirectoryComponent {
 
 
   RemoveItem(node:any){
+    console.log(node);
+    
     console.log(this.database.data);
-    let data;
-    this.database.data.filter(function(obj){
-      data=obj.item!==node.item
-    return 
-    })
-
-    console.log(data);
     
   }
 
