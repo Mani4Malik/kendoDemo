@@ -109,29 +109,46 @@ export class ChecklistDatabase {
    * The return value is the list of `TodoItemNode`.
    */
 
-  buildFileTree(obj:any, level: number): TodoItemNode[] {    
-// console.log(obj);
+  buildFileTree(obj:any, level: number): TodoItemNode[] {
 
  return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {   
-      const value = obj[key];
 
-      console.log('value',typeof value=='object'?value:[]);
-      
-      const type=typeof value;  
-      
-     const node:any = new TodoItemNode();  
-      node.item=key; 
-      
-      if (value != null) {     
-        if (typeof value === 'object') {         
-          node.children = this.buildFileTree(value, level+1);           
+      let value = obj[key]; 
+      const type=typeof value; 
+      const node:any = new TodoItemNode();  
+    
+      node.item=key;
+
+     if (value != null) {     
+        if (typeof value === 'object') { 
+           const newval=Object.entries(value).map(item =>{
+                  // var x=();
+             console.log(typeof item[1]!='object' && item[1]!=?item[1]:'');
+             
+        })
+        // console.log(newval);
+        
+      //   if(typeof newval[1] !='undefined'){
+      //     let key:'';
+      //     key= newval[1];
+      //     const val={};
+          
+      //     val[key]=value
+      //     console.log(val);
+      //     console.log(key);
+      // }
+        
+        
+        
+          
+          
+          node.children = this.buildFileTree(value, level+1); 
+
         } else  {  
            node.item = value;
            
         }
-
-      } 
-     
+      }  
       
       return accumulator.concat(node)
       
