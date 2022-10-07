@@ -79,6 +79,10 @@ const TREE_DATA = {  "RCATree": [
                       "children": [],
                       "workflowid": null
                   },]},]},]};
+
+
+
+
 /**
  * Checklist database, it can build a tree structured Json object.
  * Each node in Json object represents a to-do item or a category.
@@ -101,6 +105,10 @@ export class ChecklistDatabase {
 
     // Notify the change.
     this.dataChange.next(data);
+
+
+    console.log(TREE_DATA);
+    
     
   }
 
@@ -113,9 +121,8 @@ export class ChecklistDatabase {
 // console.log(obj);
 
  return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {   
-      const value = obj[key];
-
-      console.log('value',typeof value=='object'?value:[]);
+  
+      let value = obj[key]; 
       
       const type=typeof value;  
       
@@ -123,13 +130,11 @@ export class ChecklistDatabase {
       node.item=key; 
       
       if (value != null) {     
-        if (typeof value === 'object') {         
+        if (typeof value === 'object') { 
           node.children = this.buildFileTree(value, level+1);           
         } else  {  
-           node.item = value;
-           
+           node.item = value;           
         }
-
       } 
      
       
@@ -303,6 +308,8 @@ export class DirectoryComponent {
       this.dataSource.data = data;
     });
   }
+
+
 
   getLevel = (node: TodoItemFlatNode) => node.level;
 
