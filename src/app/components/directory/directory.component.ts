@@ -4,6 +4,8 @@ import { Component, Injectable, ElementRef, ViewChild } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { nodeIndex } from '@progress/kendo-angular-dropdowns/dropdowntrees/lookup/lookup.service';
 import { BehaviorSubject } from 'rxjs';
+import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DialogComponent } from './dialog/dialog.component';
 
 /**
  * Node for to-do item
@@ -1980,19 +1982,18 @@ export class ChecklistDatabase {
 //    Object.keys(tree).reduce((h:any, key)=>{
 //   tree[key].children= tree[key].children.reduce((h: { [x: string]: any; }, o: { text: string | number; }) => (h[o.text] = Object.assign({}, o), h), Object.create(null),[]);
 // }, []);
-   console.log(TREE_DATA);
+//    console.log(TREE_DATA);
    
      
-let tree =this.RCATree(TREE_DATA)
-
-      
-    
+let tree =this.RCATree(TREE_DATA)    
 
 
 const data = this.buildFileTree(tree , 0);
 
     // Notify the change.
     this.dataChange.next(data);
+    console.log(data);
+    
     
   }
 
@@ -2005,6 +2006,7 @@ const data = this.buildFileTree(tree , 0);
 
 }
 childrenMapper(obj:any){
+
  Object.keys(obj).reduce((h:any, key)=>{
     let current = obj[key].children   
     let type=typeof current
@@ -2012,12 +2014,11 @@ childrenMapper(obj:any){
         
       } else {
         current=current.reduce((h: { [x: string]: any; }, o: { text: string | number; }) => (h[o.text] = Object.assign({}, o), h),Object.create(null),[]);
-        obj[key].children=current;   
-        if(typeof current=='object'){
-          this.childrenMapper(current);
-        }
-         
-       }
+        obj[key]=current;   
+            if(typeof current=='object'){
+            this.childrenMapper(current);
+            }
+         }
     
      }, []);
     
@@ -2034,9 +2035,9 @@ childrenMapper(obj:any){
       const type=typeof value; 
       const node:any = new TodoItemNode(); 
     //   if(type ==='object'&& typeof key =='string'&&key!='workflowid'&&key!='state') {   
-      let result:any;
+    
           node.item=key;
-        //   console.log(type,key);
+        //   console.log(key!='children'?key:'');
         //    }
                
      if (value != null) {     
@@ -2049,17 +2050,20 @@ childrenMapper(obj:any){
           
         //    if(typeof value !='string'&& typeof value !='number'){
             
-               node.item = value;          
+               node.item = value; 
+                     
         //    }
            
            
         }
       }      
-     
+        
+         
     
-   return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&&key!='workflowid'&&key!='state'?node:[]);
+   return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&& key!='workflowid'&&key!='state'?node:[]);
       
     },[]);
+
   }
 
   /** Add an item to to-do list */
@@ -2127,9 +2131,9 @@ childrenMapper(obj:any){
     return null;
   }
 
-  updateItem(node: TodoItemNode, name: string) {
+  updateItem(node: TodoItemNode, name: string) {  
     node.item = name;
-    this.dataChange.next(this.data);
+    this.dataChange.next(this.data);  
   }
 
   deleteItem(node: TodoItemNode) {
@@ -2217,10 +2221,11 @@ export class DirectoryComponent {
   @ViewChild('emptyItem')
   emptyItem!: ElementRef;
 
-  constructor(private database: ChecklistDatabase) {
+  constructor(private database: ChecklistDatabase, private dialog: MatDialog) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+   
 
     database.dataChange.subscribe(data => {
       this.dataSource.data = [];
@@ -2237,6 +2242,7 @@ export class DirectoryComponent {
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
   hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+  toContentUpdate = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item ==='node' ;
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
@@ -2277,13 +2283,13 @@ export class DirectoryComponent {
   }
 
   /** Select the category so we can insert the new item. */
-  addNewItem(node: TodoItemFlatNode) {
+  addNewItem(node: TodoItemFlatNode) {    
     const parentNode:any = this.flatNodeMap.get(node);
     this.database.insertItem(parentNode, '');
     this.treeControl.expand(node);
   }
   /** Save the node to database */
-  saveNode(node: TodoItemFlatNode, itemValue: string) {
+  saveNode(node: TodoItemNode, itemValue: string) {
     const nestedNode:any = this.flatNodeMap.get(node);
     this.database.updateItem(nestedNode, itemValue);
   }
@@ -2355,11 +2361,22 @@ export class DirectoryComponent {
     
   }
 
-  updateItem(node:any,name:string){       
-    const nestedNode:any = this.flatNodeMap.get(node);
-    this.database.updateItem(nestedNode,name);
+  updatItem(node:any,name:any){
+    node.item=name;
+console.log(this.dataSource.data.filter((value) => value.item === name)[0]=node);
+
+    //  this.dataSource.data.filter((value) => value.item === name);    
   }
 
- 
+  openDialog(node:any): void {
+    
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '250px',
+      data: node,
+      
+    });
+}
 
 }
+
+

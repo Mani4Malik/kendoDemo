@@ -17,6 +17,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
 import { ChecklistDatabase, DirectoryComponent } from './components/directory/directory.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DialogComponent } from './components/directory/dialog/dialog.component';
 
 
 
@@ -28,7 +30,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   declarations: [
     AppComponent,
     DataComponent,  
-    ListComponent, DirectoryComponent,
+    ListComponent, DirectoryComponent, DialogComponent, 
   ],
   imports: [
     BrowserModule,
@@ -50,11 +52,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatIconModule,
     MatTreeModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule
 
     
   ],
-  providers: [ChecklistDatabase],
+  providers: [ChecklistDatabase,DirectoryComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
