@@ -2027,9 +2027,7 @@ childrenMapper(obj:any){
   /**
    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
    * The return value is the list of `TodoItemNode`.
-   */
-
-<<<<<<< HEAD
+ 
   buildFileTree(obj:any, level: number): TodoItemNode[] {    
 // console.log(obj);
 
@@ -2078,11 +2076,8 @@ childrenMapper(obj:any){
            
         }
       }      
-<<<<<<< HEAD
         
          
-=======
->>>>>>> 4de16d701cf3f5c63c4602291b86dc0a6bcfa828
      
 >>>>>>> 12f40a414902b859641159564b73adbad434c6b6
     
