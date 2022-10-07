@@ -2024,9 +2024,9 @@ childrenMapper(obj:any){
     
    return obj
   }
-  /**
-   * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
-   * The return value is the list of `TodoItemNode`.
+  
+//    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
+//    * The return value is the list of `TodoItemNode`.
  
   buildFileTree(obj:any, level: number): TodoItemNode[] {    
 // console.log(obj);
@@ -2047,7 +2047,7 @@ childrenMapper(obj:any){
            node.item = value;           
         }
       } 
-=======
+
   buildFileTree(obj: any, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {        
       let value = obj[key];
@@ -2078,8 +2078,7 @@ childrenMapper(obj:any){
       }      
         
          
-     
->>>>>>> 12f40a414902b859641159564b73adbad434c6b6
+
     
    return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&& key!='workflowid'&&key!='state'?node:[]);
       
@@ -2087,7 +2086,7 @@ childrenMapper(obj:any){
 
   }
 
-  /** Add an item to to-do list */
+
 
   insertItem(parent: TodoItemNode, name: string): TodoItemNode {
     
