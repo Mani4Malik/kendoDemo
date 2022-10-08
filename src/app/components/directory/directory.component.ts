@@ -2032,27 +2032,6 @@ childrenMapper(obj:any){
    * The return value is the list of `TodoItemNode`.
    */
 
-<<<<<<< HEAD
-  buildFileTree(obj:any, level: number): TodoItemNode[] {    
-// console.log(obj);
-
- return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {   
-  
-      let value = obj[key]; 
-      
-      const type=typeof value;  
-      
-     const node:any = new TodoItemNode();  
-      node.item=key; 
-      
-      if (value != null) {     
-        if (typeof value === 'object') { 
-          node.children = this.buildFileTree(value, level+1);           
-        } else  {  
-           node.item = value;           
-        }
-      } 
-=======
   buildFileTree(obj: any, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {        
       let value = obj[key];
@@ -2080,7 +2059,6 @@ childrenMapper(obj:any){
            
         }
       }      
->>>>>>> 4de16d701cf3f5c63c4602291b86dc0a6bcfa828
      
     
    return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&&key!='workflowid'&&key!='state'?node:[]);
