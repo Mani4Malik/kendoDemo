@@ -1980,7 +1980,7 @@ export class ChecklistDatabase {
 //    Object.keys(tree).reduce((h:any, key)=>{
 //   tree[key].children= tree[key].children.reduce((h: { [x: string]: any; }, o: { text: string | number; }) => (h[o.text] = Object.assign({}, o), h), Object.create(null),[]);
 // }, []);
-   console.log(TREE_DATA);
+//    console.log(TREE_DATA);
    
      
 let tree =this.RCATree(TREE_DATA)
@@ -1990,12 +1990,10 @@ let tree =this.RCATree(TREE_DATA)
 
 
 const data = this.buildFileTree(tree , 0);
+console.log(data);
 
     // Notify the change.
     this.dataChange.next(data);
-
-
-    console.log(TREE_DATA);
     
     
   }
@@ -2013,7 +2011,7 @@ childrenMapper(obj:any){
     let current = obj[key].children   
     let type=typeof current
       if(current === '[]') { 
-        
+        return
       } else {
         current=current.reduce((h: { [x: string]: any; }, o: { text: string | number; }) => (h[o.text] = Object.assign({}, o), h),Object.create(null),[]);
         obj[key].children=current;   
@@ -2064,6 +2062,7 @@ childrenMapper(obj:any){
    return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&&key!='workflowid'&&key!='state'?node:[]);
       
     },[]);
+
   }
 
   /** Add an item to to-do list */
