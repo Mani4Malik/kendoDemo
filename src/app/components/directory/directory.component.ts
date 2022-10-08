@@ -2028,12 +2028,6 @@ childrenMapper(obj:any){
     
    return obj
   }
-<<<<<<< HEAD
-  /**
-   * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
-   * The return value is the list of `TodoItemNode`.
-   */
-=======
   
 //    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
 //    * The return value is the list of `TodoItemNode`.
@@ -2057,7 +2051,6 @@ childrenMapper(obj:any){
            node.item = value;           
         }
       } 
->>>>>>> 9566aae70c9cb20dfbda9141ee01f97e0c5d124c
 
   buildFileTree(obj: any, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {        
