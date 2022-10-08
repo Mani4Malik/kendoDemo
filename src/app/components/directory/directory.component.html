@@ -3,45 +3,44 @@
                  matTreeNodeToggle
                  matTreeNodePadding>                 
     <span class="mat-icon-button" disabled></span>
+<!-- 
     <mat-checkbox class="checklist-leaf-node"
                   [checked]="checklistSelection.isSelected(node)"
                   (change)="todoItemSelectionToggle(node)">
-                  </mat-checkbox>
+                  </mat-checkbox> -->
     <span>{{node.item}}</span>
     <span class="mat-icon-button" (click)="addNewItem(node)"><mat-icon>add</mat-icon></span>
+    <span mat-raised-button class="mat-icon-button" (click)="openDialog(node)" ><mat-icon>edit</mat-icon></span>
     <span class="mat-icon-button" (click)="RemoveItem(node)"><mat-icon>delete</mat-icon></span>
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-    <button mat-button  >Cancel</button>
+    <!-- <button  mat-button  >Cancel</button> -->
     <mat-form-field>
       <input matInput class="form-control" name="item" #itemValue placeholder="New item...">
     </mat-form-field>
     <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
   </mat-tree-node>
 
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild"  matTreeNodePadding>                 
-    <span class="mat-icon-button" matTreeNodeToggle
-            [attr.aria-label]="'toggle ' + node.filename">
-      <mat-icon class="mat-icon-rtl-mirror">
-        
-        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-      </mat-icon>
-    </span>
-    <mat-checkbox class="checklist-leaf-node"
-                  [checked]="checklistSelection.isSelected(node)"
-                  [indeterminate]="descendantsPartiallySelected(node)"
-                  (change)="todoItemSelectionToggle(node)"
-                  >
-                  </mat-checkbox>
-    <span>{{node.item}}</span>
-                 <span class="mat-icon-button" (click)="addNewItem(node)"><mat-icon>add</mat-icon></span>
-                 <mat-tree-node *matTreeNodeDef="let node; when:hasChild"  matTreeNodePadding>  
-                        
-                  </mat-tree-node>
-
-                 <span class="mat-icon-button" (click)="RemoveItem(node)"><mat-icon>delete</mat-icon></span>
-  </mat-tree-node>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild,toContentUpdate"  matTreeNodePadding>                   
+        <span class="mat-icon-button" matTreeNodeToggle
+                [attr.aria-label]="'toggle ' + node.filename">
+          <mat-icon class="mat-icon-rtl-mirror">
+            
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </span>
+        <!-- <mat-checkbox *ngIf="node.item!='children'" class="checklist-leaf-node"
+                      [checked]="checklistSelection.isSelected(node)"
+                      [indeterminate]="descendantsPartiallySelected(node)"
+                      (change)="todoItemSelectionToggle(node)"
+                      >
+                      </mat-checkbox> -->
+        <span>{{node.item!='children'?node.item:[]}}</span>
+                    <span class="mat-icon-button" (click)="addNewItem(node)"><mat-icon>add</mat-icon></span>
+                    <span mat-raised-button class="mat-icon-button" (click)="openDialog(node)"><mat-icon>edit</mat-icon></span>
+                    <span class="mat-icon-button" (click)="RemoveItem(node)"><mat-icon>delete</mat-icon></span>
+      
+   </mat-tree-node>
 </mat-tree>
 
-<span #emptyItem></span>

@@ -4,6 +4,8 @@ import { Component, Injectable, ElementRef, ViewChild } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { nodeIndex } from '@progress/kendo-angular-dropdowns/dropdowntrees/lookup/lookup.service';
 import { BehaviorSubject } from 'rxjs';
+import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DialogComponent } from './dialog/dialog.component';
 
 /**
  * Node for to-do item
@@ -1983,10 +1985,7 @@ export class ChecklistDatabase {
 //    console.log(TREE_DATA);
    
      
-let tree =this.RCATree(TREE_DATA)
-
-      
-    
+let tree =this.RCATree(TREE_DATA)    
 
 
 const data = this.buildFileTree(tree , 0);
@@ -1994,6 +1993,10 @@ console.log(data);
 
     // Notify the change.
     this.dataChange.next(data);
+<<<<<<< HEAD
+=======
+    console.log(data);
+>>>>>>> 9566aae70c9cb20dfbda9141ee01f97e0c5d124c
     
     
   }
@@ -2007,6 +2010,7 @@ console.log(data);
 
 }
 childrenMapper(obj:any){
+
  Object.keys(obj).reduce((h:any, key)=>{
     let current = obj[key].children   
     let type=typeof current
@@ -2014,21 +2018,46 @@ childrenMapper(obj:any){
         return
       } else {
         current=current.reduce((h: { [x: string]: any; }, o: { text: string | number; }) => (h[o.text] = Object.assign({}, o), h),Object.create(null),[]);
-        obj[key].children=current;   
-        if(typeof current=='object'){
-          this.childrenMapper(current);
-        }
-         
-       }
+        obj[key]=current;   
+            if(typeof current=='object'){
+            this.childrenMapper(current);
+            }
+         }
     
      }, []);
     
    return obj
   }
+<<<<<<< HEAD
   /**
    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
    * The return value is the list of `TodoItemNode`.
    */
+=======
+  
+//    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
+//    * The return value is the list of `TodoItemNode`.
+ 
+  buildFileTree(obj:any, level: number): TodoItemNode[] {    
+// console.log(obj);
+
+ return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {   
+  
+      let value = obj[key]; 
+      
+      const type=typeof value;  
+      
+     const node:any = new TodoItemNode();  
+      node.item=key; 
+      
+      if (value != null) {     
+        if (typeof value === 'object') { 
+          node.children = this.buildFileTree(value, level+1);           
+        } else  {  
+           node.item = value;           
+        }
+      } 
+>>>>>>> 9566aae70c9cb20dfbda9141ee01f97e0c5d124c
 
   buildFileTree(obj: any, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {        
@@ -2036,9 +2065,9 @@ childrenMapper(obj:any){
       const type=typeof value; 
       const node:any = new TodoItemNode(); 
     //   if(type ==='object'&& typeof key =='string'&&key!='workflowid'&&key!='state') {   
-      let result:any;
+    
           node.item=key;
-        //   console.log(type,key);
+        //   console.log(key!='children'?key:'');
         //    }
                
      if (value != null) {     
@@ -2051,21 +2080,28 @@ childrenMapper(obj:any){
           
         //    if(typeof value !='string'&& typeof value !='number'){
             
-               node.item = value;          
+               node.item = value; 
+                     
         //    }
            
            
         }
       }      
+<<<<<<< HEAD
      
+=======
+        
+         
+
+>>>>>>> 9566aae70c9cb20dfbda9141ee01f97e0c5d124c
     
-   return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&&key!='workflowid'&&key!='state'?node:[]);
+   return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&& key!='workflowid'&&key!='state'?node:[]);
       
     },[]);
 
   }
 
-  /** Add an item to to-do list */
+
 
   insertItem(parent: TodoItemNode, name: string): TodoItemNode {
     
@@ -2130,9 +2166,9 @@ childrenMapper(obj:any){
     return null;
   }
 
-  updateItem(node: TodoItemNode, name: string) {
+  updateItem(node: TodoItemNode, name: string) {  
     node.item = name;
-    this.dataChange.next(this.data);
+    this.dataChange.next(this.data);  
   }
 
   deleteItem(node: TodoItemNode) {
@@ -2220,10 +2256,11 @@ export class DirectoryComponent {
   @ViewChild('emptyItem')
   emptyItem!: ElementRef;
 
-  constructor(private database: ChecklistDatabase) {
+  constructor(private database: ChecklistDatabase, private dialog: MatDialog) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+   
 
     database.dataChange.subscribe(data => {
       this.dataSource.data = [];
@@ -2242,6 +2279,7 @@ export class DirectoryComponent {
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
   hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+  toContentUpdate = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item ==='node' ;
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
@@ -2282,13 +2320,13 @@ export class DirectoryComponent {
   }
 
   /** Select the category so we can insert the new item. */
-  addNewItem(node: TodoItemFlatNode) {
+  addNewItem(node: TodoItemFlatNode) {    
     const parentNode:any = this.flatNodeMap.get(node);
     this.database.insertItem(parentNode, '');
     this.treeControl.expand(node);
   }
   /** Save the node to database */
-  saveNode(node: TodoItemFlatNode, itemValue: string) {
+  saveNode(node: TodoItemNode, itemValue: string) {
     const nestedNode:any = this.flatNodeMap.get(node);
     this.database.updateItem(nestedNode, itemValue);
   }
@@ -2360,11 +2398,22 @@ export class DirectoryComponent {
     
   }
 
-  updateItem(node:any,name:string){       
-    const nestedNode:any = this.flatNodeMap.get(node);
-    this.database.updateItem(nestedNode,name);
+  updatItem(node:any,name:any){
+    node.item=name;
+console.log(this.dataSource.data.filter((value) => value.item === name)[0]=node);
+
+    //  this.dataSource.data.filter((value) => value.item === name);    
   }
 
- 
+  openDialog(node:any): void {
+    
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '250px',
+      data: node,
+      
+    });
+}
 
 }
+
+
