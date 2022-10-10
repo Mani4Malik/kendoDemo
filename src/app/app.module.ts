@@ -19,7 +19,7 @@ import { ChecklistDatabase, DirectoryComponent } from './components/directory/di
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './components/directory/dialog/dialog.component';
-
+import { AddDialogComponent } from './components/directory/add-dialog/add-dialog.component';
 
 
 
@@ -30,7 +30,7 @@ import { DialogComponent } from './components/directory/dialog/dialog.component'
   declarations: [
     AppComponent,
     DataComponent,  
-    ListComponent, DirectoryComponent, DialogComponent, 
+    ListComponent, DirectoryComponent, DialogComponent, AddDialogComponent
   ],
   imports: [
     BrowserModule,

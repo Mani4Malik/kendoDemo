@@ -6,6 +6,8 @@ import { nodeIndex } from '@progress/kendo-angular-dropdowns/dropdowntrees/looku
 import { BehaviorSubject } from 'rxjs';
 import {MatDialog, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
+import { AddDialogComponent } from './add-dialog/add-dialog.component';
+import { leadingComment } from '@angular/compiler';
 
 /**
  * Node for to-do item
@@ -1989,14 +1991,9 @@ let tree =this.RCATree(TREE_DATA)
 
 
 const data = this.buildFileTree(tree , 0);
-console.log(data);
 
     // Notify the change.
     this.dataChange.next(data);
-<<<<<<< HEAD
-=======
-    console.log(data);
->>>>>>> 9566aae70c9cb20dfbda9141ee01f97e0c5d124c
     
     
   }
@@ -2050,44 +2047,7 @@ childrenMapper(obj:any){
         } else  {  
            node.item = value;           
         }
-      } 
-
-  buildFileTree(obj: any, level: number): TodoItemNode[] {
-    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {        
-      let value = obj[key];
-      const type=typeof value; 
-      const node:any = new TodoItemNode(); 
-    //   if(type ==='object'&& typeof key =='string'&&key!='workflowid'&&key!='state') {   
-    
-          node.item=key;
-        //   console.log(key!='children'?key:'');
-        //    }
-               
-     if (value != null) {     
-        if (typeof value === 'object') {  
-           
-          node.children = this.buildFileTree(value, level+1); 
-        
-                     
-        } else  {     
-          
-        //    if(typeof value !='string'&& typeof value !='number'){
-            
-               node.item = value; 
-                     
-        //    }
-           
-           
-        }
-      }      
-<<<<<<< HEAD
-     
-=======
-        
-         
-
->>>>>>> 9566aae70c9cb20dfbda9141ee01f97e0c5d124c
-    
+      }
    return accumulator.concat(typeof value !='string'&& typeof value !='number'&&type ==='object'&& typeof key =='string'&& key!='workflowid'&&key!='state'?node:[]);
       
     },[]);
@@ -2096,14 +2056,13 @@ childrenMapper(obj:any){
 
 
 
-  insertItem(parent: TodoItemNode, name: string): TodoItemNode {
-    
+  insertItem(parent:TodoItemNode, name: string): TodoItemNode {    
     if (!parent.children) {
       parent.children = [];
     }
     const newItem = { item: name } as TodoItemNode;
     parent.children.push(newItem);
-    this.dataChange.next(this.data);
+    this.dataChange.next(this.data);    
     return newItem;
   }
 
@@ -2116,6 +2075,7 @@ childrenMapper(obj:any){
       this.data.splice(this.data.indexOf(node), 0, newItem);
     }
     this.dataChange.next(this.data);
+
     return newItem;
   }
 
@@ -2159,8 +2119,8 @@ childrenMapper(obj:any){
     return null;
   }
 
-  updateItem(node: TodoItemNode, name: string) {  
-    node.item = name;
+  updateItem(node:any, name: string) {  
+    node.item = name;    
     this.dataChange.next(this.data);  
   }
 
@@ -2249,7 +2209,7 @@ export class DirectoryComponent {
   @ViewChild('emptyItem')
   emptyItem!: ElementRef;
 
-  constructor(private database: ChecklistDatabase, private dialog: MatDialog) {
+  constructor(private database: ChecklistDatabase, private dialog: MatDialog,private addDialog: MatDialog) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -2313,15 +2273,15 @@ export class DirectoryComponent {
   }
 
   /** Select the category so we can insert the new item. */
-  addNewItem(node: TodoItemFlatNode) {    
-    const parentNode:any = this.flatNodeMap.get(node);
-    this.database.insertItem(parentNode, '');
+  addNewItem(node: TodoItemFlatNode) {
+    const parentNode = this.flatNodeMap.get(node);
+    this.database.insertItem(parentNode!, '');
     this.treeControl.expand(node);
   }
   /** Save the node to database */
-  saveNode(node: TodoItemNode, itemValue: string) {
-    const nestedNode:any = this.flatNodeMap.get(node);
-    this.database.updateItem(nestedNode, itemValue);
+  saveNode(node: TodoItemFlatNode, itemValue: string) {
+    const nestedNode = this.flatNodeMap.get(node);
+    this.database.updateItem(nestedNode!, itemValue);
   }
 
   handleDragStart(event:any, node:any) {
@@ -2391,19 +2351,61 @@ export class DirectoryComponent {
     
   }
 
-  updatItem(node:any,name:any){
-    node.item=name;
-console.log(this.dataSource.data.filter((value) => value.item === name)[0]=node);
+  updateData(node:any,name:any){
 
-    //  this.dataSource.data.filter((value) => value.item === name);    
+    // let data=this.database.data;
+    // if(data == node.item) {
+    //     return data;
+    // }
+    // if(node.children && node.children.length > 0) {
+    //     for(var i=0; i < node.children.length; i++) {
+    //         var node:any = traverseChildren(node.children[i], );
+    //         if(node != null) {
+    //             return node;
+    //         }
+    //     }
+    // }
+    // return null;
+    // }
+    // node.item=name;      
+//     let a:any=[];
+
+this.database.data.map(value=>{
+    if(value.item==node.item){        
+        value.item=name
+    }    // console.log(value.children.filter(value=>value.item==node.item))}
+        //  value.children.map(value=>{
+        //     if(value.item==node.name){
+            
+        //  })
+    
+});
+    // this.database.data.map(value=>{
+    //     if(typeof value.children=='object'){
+    //         console.log(
+
+    //            Object.entries(value.children) 
+    //         );
+    //     }
+        
+    // })
+    this.database.dataChange.next(this.database.data);
+
   }
 
   openDialog(node:any): void {
-    
+
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '250px',
       data: node,
       
+    });
+}
+openAddDialog(node:any){  
+   
+    const addDialogRef = this.addDialog.open(AddDialogComponent, {
+      width: '250px',
+      data:node
     });
 }
 
