@@ -2007,7 +2007,6 @@ const data = this.buildFileTree(tree , 0);
 
 }
 childrenMapper(obj:any){
-
  Object.keys(obj).reduce((h:any, key)=>{
     let current = obj[key].children   
     let type=typeof current
@@ -2350,45 +2349,30 @@ export class DirectoryComponent {
     this.database.deleteItem(nestedNode);
     
   }
+  searchTree(tree, node,val) {
+    var i, f = null; // iterator, found node
+    if (Array.isArray(tree)) { // if entry object is array objects, check each object
+      for (i = 0; i < tree.length; i++) {
+        f = searchTree(tree[i], nodesProp, prop, value);
+        if (f) { // if found matching object, return it.
+          return f;
+        }
+      }
+    } else if (typeof tree === 'object') { // standard tree node (one root)
+      if (tree[prop] !== undefined && tree[prop] === value) {
+        return tree; // found matching node
+      }
+    }
+    if (tree[nodesProp] !== undefined && tree[nodesProp].length > 0) { // if this is not maching node, search nodes, children (if prop exist and it is not empty)
+      return searchTree(tree[nodesProp], nodesProp, prop, value);
+    } else {
+      return null; // node does not match and it neither have children
+    }
+  }
 
   updateData(node:any,name:any){
+    searchTree(tree, node,val)
 
-    // let data=this.database.data;
-    // if(data == node.item) {
-    //     return data;
-    // }
-    // if(node.children && node.children.length > 0) {
-    //     for(var i=0; i < node.children.length; i++) {
-    //         var node:any = traverseChildren(node.children[i], );
-    //         if(node != null) {
-    //             return node;
-    //         }
-    //     }
-    // }
-    // return null;
-    // }
-    // node.item=name;      
-//     let a:any=[];
-
-this.database.data.map(value=>{
-    if(value.item==node.item){        
-        value.item=name
-    }    // console.log(value.children.filter(value=>value.item==node.item))}
-        //  value.children.map(value=>{
-        //     if(value.item==node.name){
-            
-        //  })
-    
-});
-    // this.database.data.map(value=>{
-    //     if(typeof value.children=='object'){
-    //         console.log(
-
-    //            Object.entries(value.children) 
-    //         );
-    //     }
-        
-    // })
     this.database.dataChange.next(this.database.data);
 
   }
