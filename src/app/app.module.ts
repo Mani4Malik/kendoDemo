@@ -53,8 +53,7 @@ import { AddDialogComponent } from './components/directory/add-dialog/add-dialog
     MatTreeModule,
     MatInputModule,
     MatButtonModule,
-    MatDialogModule
-
+    MatDialogModule,
     
   ],
   providers: [ChecklistDatabase,DirectoryComponent],
