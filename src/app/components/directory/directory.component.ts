@@ -2349,32 +2349,92 @@ export class DirectoryComponent {
     this.database.deleteItem(nestedNode);
     
   }
-  searchTree(tree, node,val) {
+  searchInTree(tree: any, node: any):any {
     var i, f = null; // iterator, found node
     if (Array.isArray(tree)) { // if entry object is array objects, check each object
       for (i = 0; i < tree.length; i++) {
-        f = searchTree(tree[i], nodesProp, prop, value);
+        f = this.searchInTree(tree[i], node);
         if (f) { // if found matching object, return it.
           return f;
         }
       }
     } else if (typeof tree === 'object') { // standard tree node (one root)
-      if (tree[prop] !== undefined && tree[prop] === value) {
+      if (tree.text !== undefined && tree.text === node.item) {           
         return tree; // found matching node
       }
     }
-    if (tree[nodesProp] !== undefined && tree[nodesProp].length > 0) { // if this is not maching node, search nodes, children (if prop exist and it is not empty)
-      return searchTree(tree[nodesProp], nodesProp, prop, value);
+    if (tree.children !== undefined && tree.children.length > 0) { // if this is not maching node, search nodes, children (if prop exist and it is not empty)
+      return this.searchInTree(tree.children,node);
+    } else {
+      return null; // node does not match and it neither have children
+    }
+  }
+  addInTree(tree: any,key:any, node: any):any {
+    var i, f = null; // iterator, found node
+    if (Array.isArray(tree)) { // if entry object is array objects, check each object
+      for (i = 0; i < tree.length; i++) {
+        f = this.searchInTree(tree[i], node);
+        if (f) { // if found matching object, return it.
+          return f;
+        }
+      }
+    } else if (typeof tree === 'object') { // standard tree node (one root)
+      if (tree.text !== undefined && tree.id === key) {   
+        if(tree.children){
+            let i=tree.children;
+            tree.children[i>0?i+1:i]=node;
+        }          
+        }        
+        return tree; // found matching node
+      }
+    
+    if (tree.children !== undefined && tree.children.length > 0) { // if this is not maching node, search nodes, children (if prop exist and it is not empty)
+      return this.searchInTree(tree.children,node);
+    } else {
+      return null; // node does not match and it neither have children
+    }
+  }
+  UpdateTree(tree: any, node: any,val: any):any {
+    var i, f = null; // iterator, found node
+    if (Array.isArray(tree)) { // if entry object is array objects, check each object
+      for (i = 0; i < tree.length; i++) {
+        f = this.UpdateTree(tree[i], node,val);
+        if (f) { // if found matching object, return it.
+          return f;
+        }
+      }
+    } else if (typeof tree === 'object') { // standard tree node (one root)
+      if (tree.item !== undefined && tree.item === node.item) {
+        tree.item=val;
+        return tree; // found matching node
+      }
+    }
+    if (tree.children !== undefined && tree.children.length > 0) { // if this is not maching node, search nodes, children (if prop exist and it is not empty)
+      return this.UpdateTree(tree.children,node,val);
     } else {
       return null; // node does not match and it neither have children
     }
   }
 
   updateData(node:any,name:any){
-    searchTree(tree, node,val)
-
+    this.UpdateTree(this.database.data,node,name)    
     this.database.dataChange.next(this.database.data);
+  }
 
+  addDataInTree(node:any,newNode:any){
+      if(node!='#'){
+        let a=this.searchInTree(TREE_DATA,node);
+        if(a.parent === '#'){
+            let i=TREE_DATA.length;
+            TREE_DATA[i+1]=newNode;      
+        } else{
+            console.log(a,'child node');            
+        }       
+      }else{
+        let i=TREE_DATA.length;
+        TREE_DATA[i+1]=newNode;
+      }
+      
   }
 
   openDialog(node:any): void {
@@ -2390,6 +2450,7 @@ openAddDialog(node:any){
     const addDialogRef = this.addDialog.open(AddDialogComponent, {
       width: '250px',
       data:node
+      
     });
 }
 
